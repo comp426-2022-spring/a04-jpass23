@@ -88,8 +88,8 @@ var HTTP_PORT = args['port'] || 5555
 var DEBUG = args['debug'] || false
 var LOG = args['log'] || true
 
-//app.use(express.urlencoded({ extended: true }));
-//app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Start server
 const server = app.listen(HTTP_PORT, () => {
@@ -117,7 +117,7 @@ app.use((req, res, next) => {
     }
     const stmt = db.prepare('INSERT INTO accesslog (remoteaddr,remoteuser,time,method,url,protocol,httpversion,status,referer,useragent) VALUES (?,?,?,?,?,?,?,?,?,?)')
     const info = stmt.run(logdata.remoteaddr,logdata.remoteuser,logdata.time,logdata.method,logdata.url,logdata.protocol,logdata.httpversion,logdata.status,logdata.referer,logdata.useragent)
-    //fg res.status(200).json(info)
+    res.status(200).json(info)
     next();
 })
 
@@ -126,7 +126,7 @@ if(DEBUG){
     app.get("/app/log/access", (req,res) => {
         try {
             const stmt = db.prepare('SELECT * FROM accesslog').all()
-            //res.status(200).json(stmt)
+            res.status(200).json(stmt)
         } catch {
             console.error(e)
         }
@@ -195,7 +195,7 @@ if(LOG){
 // });
 // Default response for any other request
 app.use(function(req, res){
-	//res.json({"message":"Endpoint not found. (404)"});
+	res.json({"message":"Endpoint not found. (404)"});
     res.status(404);
 });
 
