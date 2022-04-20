@@ -84,7 +84,7 @@ if (args.help || args.h) {
 }
 
 
-var HTTP_PORT = args['port'] || 5000
+var HTTP_PORT = args['port'] || 5555
 var DEBUG = args['debug'] || false
 var LOG = args['log'] || true
 
@@ -98,10 +98,10 @@ const server = app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
 });
 // READ (HTTP method GET) at root endpoint /app/
-app.get("/app/", (req, res, next) => {
-    res.json({"message":"Your API works! (200)"});
-	res.status(200);
-});
+// app.get("/app/", (req, res, next) => {
+//     res.json({"message":"Your API works! (200)"});
+// 	res.status(200);
+// });
 
 //FIX THIS
 app.use((req, res, next) => {
@@ -117,6 +117,9 @@ app.use((req, res, next) => {
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
+    const stmt = db.prepare('INSERT INTO accesslog (remoteaddr,remoteuser,time,method,url,protocol,httpversion,status,referer,useragent) VALUES (?,?,?,?,?,?,?,?,?,?)')
+    const info = stmt.run(logdata.remoteaddr,logdata.remoteuser,logdata.time,logdata.method,logdata.url,logdata.protocol,logdata.httpversion,logdata.status,logdata.referer,logdata.useragent)
+    res.status(200).json(info)
     next();
 })
 
@@ -136,61 +139,62 @@ if(DEBUG){
     });
 }
 
-// if(LOG){
-//     // Use morgan for logging to files
-//     // Create a write stream to append (flags: 'a') to a file
-//     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
-//     // Set up the access logging middleware
-//     app.use(morgan('tiny', { stream: WRITESTREAM }))
-// }
+if(LOG){
+    // Use morgan for logging to files
+    // Create a write stream to append (flags: 'a') to a file
+    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
+    // Set up the access logging middleware
+    app.use(morgan('tiny', { stream: WRITESTREAM }))
+}
+
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
-app.post("/app/new/user", (req, res, next) => {
-    let data = {
-        user: req.body.username,
-        pass: req.body.password
-    }
-    const stmt = db.prepare('INSERT INTO accesslog (username, password) VALUES (?, ?)')
-    const info = stmt.run(data.user, data.pass)
-    res.status(200).json(info)
-});
-// READ a list of users (HTTP method GET) at endpoint /app/users/
-app.get("/app/users", (req, res) => {	
-    try {
-        const stmt = db.prepare('SELECT * FROM accesslog').all()
-        res.status(200).json(stmt)
-    } catch {
-        console.error(e)
-    }
-});
+// app.post("/app/new/user", (req, res, next) => {
+//     let data = {
+//         user: req.body.username,
+//         pass: req.body.password
+//     }
+//     const stmt = db.prepare('INSERT INTO accesslog (username, password) VALUES (?, ?)')
+//     const info = stmt.run(data.user, data.pass)
+//     res.status(200).json(info)
+// });
+// // READ a list of users (HTTP method GET) at endpoint /app/users/
+// app.get("/app/users", (req, res) => {	
+//     try {
+//         const stmt = db.prepare('SELECT * FROM accesslog').all()
+//         res.status(200).json(stmt)
+//     } catch {
+//         console.error(e)
+//     }
+// });
 
-// READ a single user (HTTP method GET) at endpoint /app/user/:id
-app.get("/app/user/:id", (req, res) => {
-    try {
-        const stmt = db.prepare('SELECT * FROM accesslog WHERE id = ?').get(req.params.id);
-        res.status(200).json(stmt)
-    } catch (e) {
-        console.error(e)
-    }
+// // READ a single user (HTTP method GET) at endpoint /app/user/:id
+// app.get("/app/user/:id", (req, res) => {
+//     try {
+//         const stmt = db.prepare('SELECT * FROM accesslog WHERE id = ?').get(req.params.id);
+//         res.status(200).json(stmt)
+//     } catch (e) {
+//         console.error(e)
+//     }
 
-});
+// });
 
-// UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
-app.patch("/app/update/user/:id", (req, res) => {
-    let data = {
-        user: req.body.username,
-        pass: req.body.password
-    }
-    const stmt = db.prepare('UPDATE accesslog SET username = COALESCE(?,username), password = COALESCE(?,password) WHERE id = ?')
-    const info = stmt.run(data.user, data.pass, req.params.id)
-    res.status(200).json(info)
-});
+// // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
+// app.patch("/app/update/user/:id", (req, res) => {
+//     let data = {
+//         user: req.body.username,
+//         pass: req.body.password
+//     }
+//     const stmt = db.prepare('UPDATE accesslog SET username = COALESCE(?,username), password = COALESCE(?,password) WHERE id = ?')
+//     const info = stmt.run(data.user, data.pass, req.params.id)
+//     res.status(200).json(info)
+// });
 
-// DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
-app.delete("/app/delete/user/:id", (req, res) => {
-    const stmt = db.prepare('DELETE FROM accesslog WHERE id = ?')
-    const info = stmt.run(req.params.id)
-    res.status(200).json(info)
-});
+// // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
+// app.delete("/app/delete/user/:id", (req, res) => {
+//     const stmt = db.prepare('DELETE FROM accesslog WHERE id = ?')
+//     const info = stmt.run(req.params.id)
+//     res.status(200).json(info)
+// });
 // Default response for any other request
 app.use(function(req, res){
 	res.json({"message":"Endpoint not found. (404)"});
