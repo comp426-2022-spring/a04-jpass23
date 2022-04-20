@@ -54,7 +54,7 @@ const args = minimist(process.argv.slice(2));
 const morgan = require('morgan')
 
 //Use morgan for logging:
-app.use(morgan('tiny'))
+//app.use(morgan('tiny'))
 
 //require fs:
 const fs = require('fs')
@@ -87,8 +87,6 @@ if (args.help || args.h) {
 var HTTP_PORT = args['port'] || 5000
 var DEBUG = args['debug'] || false
 var LOG = args['log'] || true
-var HELP = args['help'] || false
-
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -105,21 +103,60 @@ app.get("/app/", (req, res, next) => {
 	res.status(200);
 });
 
+//FIX THIS
+app.use((req, res, next) => {
+    let logdata = {
+        remoteaddr: req.ip,
+        remoteuser: req.user,
+        time: Date.now(),
+        method: req.method,
+        url: req.url,
+        protocol: req.protocol,
+        httpversion: req.httpVersion,
+        status: res.statusCode,
+        referer: req.headers['referer'],
+        useragent: req.headers['user-agent']
+    }
+    next();
+})
+
 // Define other CRUD API endpoints using express.js and better-sqlite3
+if(DEBUG){
+    app.get("/app/log/access", (req,res) => {
+        try {
+            const stmt = db.prepare('SELECT * FROM accesslog').all()
+            res.status(200).json(stmt)
+        } catch {
+            console.error(e)
+        }
+    });
+
+    app.get("/app/error", (req,res) => {
+        throw new Error('Error test successful')
+    });
+}
+
+// if(LOG){
+//     // Use morgan for logging to files
+//     // Create a write stream to append (flags: 'a') to a file
+//     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
+//     // Set up the access logging middleware
+//     app.use(morgan('tiny', { stream: WRITESTREAM }))
+// }
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
 app.post("/app/new/user", (req, res, next) => {
     let data = {
         user: req.body.username,
         pass: req.body.password
     }
-    const stmt = db.prepare('INSERT INTO userinfo (username, password) VALUES (?, ?)')
+    const stmt = db.prepare('INSERT INTO accesslog (username, password) VALUES (?, ?)')
     const info = stmt.run(data.user, data.pass)
     res.status(200).json(info)
 });
 // READ a list of users (HTTP method GET) at endpoint /app/users/
 app.get("/app/users", (req, res) => {	
     try {
-        const stmt = db.prepare('SELECT * FROM userinfo').all()
+        const stmt = db.prepare('SELECT * FROM accesslog').all()
         res.status(200).json(stmt)
     } catch {
         console.error(e)
@@ -129,7 +166,7 @@ app.get("/app/users", (req, res) => {
 // READ a single user (HTTP method GET) at endpoint /app/user/:id
 app.get("/app/user/:id", (req, res) => {
     try {
-        const stmt = db.prepare('SELECT * FROM userinfo WHERE id = ?').get(req.params.id);
+        const stmt = db.prepare('SELECT * FROM accesslog WHERE id = ?').get(req.params.id);
         res.status(200).json(stmt)
     } catch (e) {
         console.error(e)
@@ -143,14 +180,14 @@ app.patch("/app/update/user/:id", (req, res) => {
         user: req.body.username,
         pass: req.body.password
     }
-    const stmt = db.prepare('UPDATE userinfo SET username = COALESCE(?,username), password = COALESCE(?,password) WHERE id = ?')
+    const stmt = db.prepare('UPDATE accesslog SET username = COALESCE(?,username), password = COALESCE(?,password) WHERE id = ?')
     const info = stmt.run(data.user, data.pass, req.params.id)
     res.status(200).json(info)
 });
 
 // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
 app.delete("/app/delete/user/:id", (req, res) => {
-    const stmt = db.prepare('DELETE FROM userinfo WHERE id = ?')
+    const stmt = db.prepare('DELETE FROM accesslog WHERE id = ?')
     const info = stmt.run(req.params.id)
     res.status(200).json(info)
 });

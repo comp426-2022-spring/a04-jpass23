@@ -7,7 +7,7 @@ const Database = require('better-sqlite3');
 const db = new Database('log.db');
 
 const stmt = db.prepare(`
-    SELECT name FROM sqlite_master WHERE type='table' and name='userinfo';`
+    SELECT name FROM sqlite_master WHERE type='table' and name='accesslog';`
 );
 // Define row using `get()` from better-sqlite3
 let row = stmt.get();
