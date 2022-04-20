@@ -88,11 +88,9 @@ var HTTP_PORT = args['port'] || 5555
 var DEBUG = args['debug'] || false
 var LOG = args['log'] || true
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+//app.use(express.urlencoded({ extended: true }));
+//app.use(express.json());
 
-// Server port
-var HTTP_PORT = 5000 
 // Start server
 const server = app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
