@@ -194,6 +194,13 @@ if(LOG){
 //     const info = stmt.run(req.params.id)
 //     res.status(200).json(info)
 // });
+
+//other endpoints
+
+app.get('/app/flip', (req,res) => {
+    res.status(200).json({'flip':coinFlip()})
+})
+
 // Default response for any other request
 app.use(function(req, res){
 	res.json({"message":"Endpoint not found. (404)"});
