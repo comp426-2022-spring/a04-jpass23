@@ -206,6 +206,11 @@ app.get('/app/flips/:number', (req,res) => {
     const coint = countFlips(flips)
     res.status(200).json({"raw": flips, "summary":count})
 })
+
+app.get('/app/flip/call:guess(heads|tails)', (req,res) => {
+    const flipy = flipACoin(req.params.guess)
+    res.status(200).json(flipy)
+})
 // Default response for any other request
 app.use(function(req, res){
 	res.json({"message":"Endpoint not found. (404)"});
