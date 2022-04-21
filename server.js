@@ -91,15 +91,16 @@ var LOG = args['log'] || true
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Start server
-const server = app.listen(HTTP_PORT, () => {
-    console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
+// // Start server
+const server = app.listen(5555, () => {
+    console.log("Server running on port %PORT%".replace("%PORT%",5555))
 });
-// READ (HTTP method GET) at root endpoint /app/
+// // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res) => {
-    res.status(200);
+    res.statusCode = 200;
+    res.statusMessage = 'OK';
     res.writeHead(res.statusCode, {'Content-Type': 'text/plain'})
-    //res.json({"message":"Your API works! (200)"});
+    res.end(res.statusCode + ' ' + res.statusMessage);
 });
 
 //FIX THIS
