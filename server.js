@@ -201,6 +201,11 @@ app.get('/app/flip', (req,res) => {
     res.status(200).json({'flip':coinFlip()})
 })
 
+app.get('/app/flips/:number', (req,res) => {
+    const flips = coinFlips(req.params.number)
+    const coint = countFlips(flips)
+    res.status(200).json({"raw": flips, "summary":count})
+})
 // Default response for any other request
 app.use(function(req, res){
 	res.json({"message":"Endpoint not found. (404)"});
