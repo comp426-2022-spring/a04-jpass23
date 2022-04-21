@@ -84,7 +84,7 @@ if (args.help || args.h) {
 }
 
 
-var HTTP_PORT = args['port'] || 5555
+var HTTP_PORT = args['port'] ||process.env.PORT || 5555
 var DEBUG = args['debug'] || false
 var LOG = args['log'] || true
 
@@ -142,7 +142,7 @@ if(LOG){
     // Create a write stream to append (flags: 'a') to a file
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
     // Set up the access logging middleware
-    app.use(morgan('tiny', { stream: WRITESTREAM }))
+    app.use(morgan('combined', { stream: WRITESTREAM }))
 }
 
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
