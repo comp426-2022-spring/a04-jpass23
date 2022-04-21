@@ -96,10 +96,11 @@ const server = app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
 });
 // READ (HTTP method GET) at root endpoint /app/
-// app.get("/app/", (req, res, next) => {
-//     res.json({"message":"Your API works! (200)"});
-// 	res.status(200);
-// });
+app.get("/app/", (req, res) => {
+    res.status(200);
+    res.writeHead(res.statusCode, {'Content-Type': 'text/plain'})
+    //res.json({"message":"Your API works! (200)"});
+});
 
 //FIX THIS
 app.use((req, res, next) => {
