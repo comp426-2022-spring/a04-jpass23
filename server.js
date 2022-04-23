@@ -59,7 +59,8 @@ const morgan = require('morgan')
 //require fs:
 const fs = require('fs')
 
-const db = require('./database.js')
+const db = require('./database.js');
+const { getSystemErrorMap } = require('util');
 
 const help = (`
 server.js [options]
@@ -86,10 +87,11 @@ if (args.help || args.h) {
 
 var HTTP_PORT = args['port'] ||process.env.PORT || 5555
 var DEBUG = args['debug'] || false
-var LOG = true
-if(args['log'] == false){
-    LOG = false
+var LOG = args['log']
+if(iargs['log'] == null){
+    LOG = true
 }
+console.log(args['log'])
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
