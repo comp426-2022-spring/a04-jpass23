@@ -91,7 +91,7 @@ var LOG = args['log']
 if(iargs['log'] == null){
     LOG = true
 }
-console.log(args['log'])
+//console.log(args['log'])
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -109,7 +109,7 @@ app.get("/app/", (req, res) => {
 });
 
 //FIX THIS
-if(LOG){
+if(false){
     app.use((req, res, next) => {
         let logdata = {
             remoteaddr: req.ip,
@@ -145,7 +145,7 @@ if(DEBUG){
     });
 }
 
-if(LOG){
+if(false){
     // Use morgan for logging to files
     // Create a write stream to append (flags: 'a') to a file
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
