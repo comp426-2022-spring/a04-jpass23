@@ -92,8 +92,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // // Start server
-const server = app.listen(5555, () => {
-    console.log("Server running on port %PORT%".replace("%PORT%",5555))
+const server = app.listen(HTTP_PORT, () => {
+    console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
 });
 // // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res) => {
