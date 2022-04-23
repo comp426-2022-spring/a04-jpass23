@@ -88,7 +88,7 @@ if (args.help || args.h) {
 var HTTP_PORT = args['port'] ||process.env.PORT || 5555
 var DEBUG = args['debug'] || false
 var LOG = args['log']
-if(iargs['log'] == null){
+if(args['log'] == null){
     LOG = true
 }
 //console.log(args['log'])
@@ -109,7 +109,7 @@ app.get("/app/", (req, res) => {
 });
 
 //FIX THIS
-if(false){
+if(LOG){
     app.use((req, res, next) => {
         let logdata = {
             remoteaddr: req.ip,
@@ -145,7 +145,7 @@ if(DEBUG){
     });
 }
 
-if(false){
+if(LOG){
     // Use morgan for logging to files
     // Create a write stream to append (flags: 'a') to a file
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
