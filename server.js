@@ -100,7 +100,7 @@ app.use(express.json());
 const server = app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
 });
-// // READ (HTTP method GET) at root endpoint /app/
+// READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res) => {
     res.statusCode = 200;
     res.statusMessage = 'OK';
