@@ -136,7 +136,6 @@ if(DEBUG){
             console.error(e)
         }
     });
-
     app.get("/app/error", (req,res) => {
         throw new Error('Error test successful')
     });
