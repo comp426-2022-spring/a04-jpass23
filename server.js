@@ -153,8 +153,6 @@ if(LOG == 'true'){
     app.use(morgan('combined', { stream: WRITESTREAM }))
 }
 
-
-
 //other endpoints
 
 app.get('/app/flip', (req,res) => {
