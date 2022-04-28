@@ -150,7 +150,6 @@ if(LOG == 'true'){
 }
 
 //other endpoints
-
 app.get('/app/flip', (req,res) => {
     res.status(200).json({'flip':coinFlip()})
 })
