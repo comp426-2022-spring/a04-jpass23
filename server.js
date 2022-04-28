@@ -41,7 +41,6 @@ function flipACoin(call) {
 }
 
 //SERVER//
-
 // Require Express.js
 const express = require('express')
 const app = express()
