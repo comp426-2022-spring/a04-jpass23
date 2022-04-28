@@ -83,14 +83,12 @@ if (args.help || args.h) {
     process.exit(0)
 }
 
-
 var HTTP_PORT = args['port'] ||process.env.PORT || 5555
 var DEBUG = args['debug'] || false
 var LOG = args['log']
 if(args['log'] == null){
     LOG = true
 }
-//console.log(args['log'])
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
