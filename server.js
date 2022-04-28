@@ -153,54 +153,7 @@ if(LOG == 'true'){
     app.use(morgan('combined', { stream: WRITESTREAM }))
 }
 
-// CREATE a new user (HTTP method POST) at endpoint /app/new/
-// app.post("/app/new/user", (req, res, next) => {
-//     let data = {
-//         user: req.body.username,
-//         pass: req.body.password
-//     }
-//     const stmt = db.prepare('INSERT INTO accesslog (username, password) VALUES (?, ?)')
-//     const info = stmt.run(data.user, data.pass)
-//     res.status(200).json(info)
-// });
-// // READ a list of users (HTTP method GET) at endpoint /app/users/
-// app.get("/app/users", (req, res) => {	
-//     try {
-//         const stmt = db.prepare('SELECT * FROM accesslog').all()
-//         res.status(200).json(stmt)
-//     } catch {
-//         console.error(e)
-//     }
-// });
 
-// // READ a single user (HTTP method GET) at endpoint /app/user/:id
-// app.get("/app/user/:id", (req, res) => {
-//     try {
-//         const stmt = db.prepare('SELECT * FROM accesslog WHERE id = ?').get(req.params.id);
-//         res.status(200).json(stmt)
-//     } catch (e) {
-//         console.error(e)
-//     }
-
-// });
-
-// // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
-// app.patch("/app/update/user/:id", (req, res) => {
-//     let data = {
-//         user: req.body.username,
-//         pass: req.body.password
-//     }
-//     const stmt = db.prepare('UPDATE accesslog SET username = COALESCE(?,username), password = COALESCE(?,password) WHERE id = ?')
-//     const info = stmt.run(data.user, data.pass, req.params.id)
-//     res.status(200).json(info)
-// });
-
-// // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
-// app.delete("/app/delete/user/:id", (req, res) => {
-//     const stmt = db.prepare('DELETE FROM accesslog WHERE id = ?')
-//     const info = stmt.run(req.params.id)
-//     res.status(200).json(info)
-// });
 
 //other endpoints
 
